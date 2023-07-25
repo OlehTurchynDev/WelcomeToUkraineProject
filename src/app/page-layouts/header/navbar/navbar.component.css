@@ -1,0 +1,105 @@
+body {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .navbar {
+    background-color: #222;
+  }
+  
+  .navbar-brand {
+    color: #fff;
+  }
+  
+  .navbar-nav .nav-link {
+    color: #fff;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #ccc;
+  }
+
+.my-navbar{
+    border-radius: 8px;
+    min-height: 90px;
+}
+.login-form-container {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.login-form-container.show {
+  display: block;
+}
+
+.login-form {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.login-form .form-group {
+  margin-bottom: 10px;
+}
+
+.login-form label {
+  color: #fff;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+}
+.navbar-nav .nav-link .bi.bi-plus {
+  margin-right: 5px;
+}
+.registration-form-container {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.registration-form-container.show {
+  display: block;
+}
+
+.registration-form {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.registration-form .form-group {
+  margin-bottom: 10px;
+}
+
+.registration-form label {
+  color: #fff;
+}
+
+.registration-form input[type="email"],
+.registration-form input[type="text"],
+.registration-form input[type="password"] {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.registration-form button[type="submit"] {
+  width: 100%;
+}

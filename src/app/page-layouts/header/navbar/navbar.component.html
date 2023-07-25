@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top my-navbar">
+    <div class="container">
+      <!-- Логотип -->
+      <a class="navbar-brand" href="#">
+        <i class="fa-solid fa-wheat-awn fa-beat-fade fa-sm h-2500"></i> WTU
+      </a>
+  
+      <!-- Елементи навігації -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/"><i class="bi bi-house-door"></i> Головна</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about"><i class="bi bi-info-circle"></i> Про нас</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/contact"><i class="bi bi-envelope"></i> Контакти</a>
+        </li>
+      </ul>
+  
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#" (click)="toggleLoginForm()"><i class="bi bi-person"></i> Увійти</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="#"(click)="toggleRegistrationForm()"><i class="bi bi-plus"></i> Реєстрація</a> 
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Форма логінації -->
+    <div class="login-form-container" [ngClass]="{ 'show': showLoginForm }">
+      <form class="login-form">
+        <div class="form-group">
+          <label for="username">Ім'я користувача</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Увійти</button>
+      </form>
+    </div>
+
+    <!-- Форма реєстрації -->
+  <div class="registration-form-container" [ngClass]="{ 'show': showRegistrationForm }">
+    <form class="registration-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="username">Ім'я користувача</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Повторіть Пароль</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Зареєструватися</button>
+    </form>
+  </div>
+</nav>

@@ -1,0 +1,19 @@
+.main-wrap {
+    overflow: hidden;
+    position: relative;
+    margin-top: 20px;
+    border-radius:5px ;
+  }
+  
+  .main-bg {
+    opacity: 0.6;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+  }
+  
+  .main-content {
+    position: relative;
+  }
