@@ -3,7 +3,7 @@
       type="text"
       (click)="toggleCalendar()"
       [value]="formattedDate"
-      readonly
+    
     >
   
     <div *ngIf="isCalendarOpen" class="calendar" #calendarContainer>
@@ -27,9 +27,9 @@
           <tr *ngFor="let week of calendarDays">
             <ng-container *ngFor="let day of week">
               <td
-                [class.selected]="isDateSelected(day)"
-                [class.today]="isDateToday(day)"
-                (click)="selectDate(day)"
+              [class.selected]="day && isDateSelected(day)"
+              [class.today]="day && isDateToday(day)"
+              (click)="day && selectDate(day)"
               >
                 <span class="date-number">{{ day?.getDate() }}</span>
               </td>

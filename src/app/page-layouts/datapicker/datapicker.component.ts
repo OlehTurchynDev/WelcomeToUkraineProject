@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, HostListener, OnDestroy  } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -7,73 +7,82 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./datapicker.component.css']
 })
 export class DatepickerComponent implements OnDestroy {
-
-  isCalendarOpen: boolean = false; // Чи відкритий календар 
-  
-    public selectedDate: Date = new Date();// Вибрана дана (За замовчуванням на даний момент)
-  formattedDate:any = new Date().toDateString(); // Дата у потрібному для відображення форматі
+  isCalendarOpen: boolean = false; // Флаг для відкриття/закриття календаря
+  public selectedDate: Date = new Date(); // Обраний день (за замовчуванням - сьогоднішній)
+  formattedDate: any = new Date().toDateString(); // Форматована дата для відображення
   scrollContainer: Element | Window | null = null;
-  private calendarScrollListener: EventListener | null = null; // Слухач подій, чи здійснюється скролл
+  private calendarScrollListener: EventListener | null = null; // Слухач подій для скролу
 
   constructor(private datePipe: DatePipe, private elementRef: ElementRef) {
-     this.formattedDate 
-     this.unregisterScrollEvent();
-     console.log(this.selectedDate)
+    this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || ''; // Форматуємо дату для відображення
+    this.unregisterScrollEvent();
+    console.log(this.selectedDate);
   }
+
   @ViewChild('calendarContainer', { static: false }) calendarContainer!: ElementRef;
 
   ngOnDestroy() {
     this.unregisterScrollEvent();
   }
 
-// Закриття календаря на скролл
+  // Закриття календаря під час скролу
   closeCalendarOnScroll() {
     this.isCalendarOpen = false;
     this.unregisterScrollEvent();
   }
+
+  // Реєстрація слухача подій для скролу
   registerScrollEvent() {
     if (this.isCalendarOpen) {
       this.calendarScrollListener = this.closeCalendarOnScroll.bind(this);
       this.scrollContainer?.addEventListener('scroll', this.calendarScrollListener, true);
     }
   }
+
+  // Відміна реєстрації слухача подій для скролу
   unregisterScrollEvent() {
     if (this.calendarScrollListener && this.scrollContainer) {
       this.scrollContainer.removeEventListener('scroll', this.calendarScrollListener, true);
       this.scrollContainer = null;
     }
   }
+
+  // Перемикання стану відкриття/закриття календаря
   toggleCalendar() {
     this.isCalendarOpen = !this.isCalendarOpen;
     this.scrollContainer = this.isCalendarOpen ? window : this.calendarContainer.nativeElement;
     this.registerScrollEvent();
   }
 
-  // Дія на вибір дати у календарі
-   selectDate(date: Date) {
-     this.selectedDate = date;
-     this.formatDate();
-     this.isCalendarOpen = false;
-   }
-   //Отримання формату дати
-   formatDate() {
-     this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || '';
-   }
-   // Отримання днів тижня англійською
-   get weekdays() {
-     return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri ', 'Sat', 'Sun'];
-   }
-   // Отримання всіх днів тижня
-   get calendarDays() {
+  // Дія при виборі дати в календарі
+  selectDate(date: Date) {
+    this.selectedDate = date;
+    this.formatDate();
+    this.isCalendarOpen = false;
+  }
+
+  // Форматування дати
+  formatDate() {
+    this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || '';
+  }
+
+  // Отримання днів тижня англійською
+  get weekdays() {
+    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  }
+
+  // Отримання всіх днів місяця
+  get calendarDays() {
     return this.calculateFirstDayOfCalendar();
   }
-  //Отримання назви поточного місяця
+
+  // Отримання назви поточного місяця
   getMonthName() {
     return this.selectedDate.toLocaleString('en-EN', { month: 'long' });
   }
 
-  //Отримання попереднього місяця для відмальовування у пустих комірках поточного місяця
-  getPreviousMonthDate(date: Date ):any {
+  // Отримання дати попереднього місяця для відображення у пустих комірках поточного місяця
+  getPreviousMonthDate(date: Date): any {
     if (!date) {
       return '';
     }
@@ -85,26 +94,30 @@ export class DatepickerComponent implements OnDestroy {
     }
   }
 
+  // Перехід на попередній місяць
   previousMonth() {
     const currentMonth = this.selectedDate.getMonth();
     this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth - 1, 1);
     this.formatDate();
   }
-  
+
+  // Перехід на наступний місяць
   nextMonth() {
     const currentMonth = this.selectedDate.getMonth();
     this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth + 1, 1);
     this.formatDate();
     this.calculateFirstDayOfCalendar();
   }
-  
+
+  // Отримання попереднього місяця для відображення у пустих комірках поточного місяця
   getPreviousMonth() {
     const currentMonth = this.selectedDate.getMonth();
     this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth - 1, 1);
     this.formatDate();
     this.calculateFirstDayOfCalendar();
   }
-  
+
+  // Отримання наступного місяця для відображення у пустих комірках поточного місяця
   getNextMonth() {
     const currentMonth = this.selectedDate.getMonth();
     this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth + 1, 1);
@@ -112,65 +125,74 @@ export class DatepickerComponent implements OnDestroy {
     this.calculateFirstDayOfCalendar();
   }
 
+  // Обчислення кількості днів у заданому місяці та році
+daysInMonth(year: number, month: number): number {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+  // Розрахунок днів місяця для відображення у календарі
   calculateFirstDayOfCalendar() {
     const year = this.selectedDate.getFullYear();
     const month = this.selectedDate.getMonth();
     const firstDayOfMonth = new Date(year, month, 1);
     const firstWeekday = firstDayOfMonth.getDay();
-  
+
     const prevMonth = new Date(year, month - 1, 1);
     const lastDayOfPrevMonth = new Date(year, month, 0).getDate();
     const startDay = lastDayOfPrevMonth - firstWeekday + 1;
-  
+
     const calendarDays = [];
     let currentDay = startDay;
-  
+
     for (let i = 0; i < 6; i++) {
       const week = [];
       for (let j = 0; j < 7; j++) {
-        if (currentDay >= 1 && currentDay <= lastDayOfPrevMonth) {
+        if (currentDay >= 1 && currentDay <= this.daysInMonth(year, month)) {
           const day = new Date(year, month - 1, currentDay);
           week.push(day);
-        } else {
+        } else if (currentDay <= lastDayOfPrevMonth + this.daysInMonth(year, month)) {
           const day = new Date(year, month, currentDay - lastDayOfPrevMonth);
           week.push(day);
+        } else {
+          week.push(null);
         }
         currentDay++;
       }
       calendarDays.push(week);
     }
-  
+
     return calendarDays;
   }
 
- isDateSelected(date: Date) {
-   return date.toDateString() === this.selectedDate.toDateString();
- }
+  // Перевірка, чи дата вибрана
+  isDateSelected(date: Date) {
+    return date.toDateString() === this.selectedDate.toDateString();
+  }
 
- isDateToday(date: Date) {
-   const today = new Date();
-   return date.toDateString() === today.toDateString();
- }
+  // Перевірка, чи дата сьогоднішня
+  isDateToday(date: Date) {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  }
 
- 
-   @HostListener('document:click', ['$event'])
-   onClick(event: MouseEvent) {
-     const targetElement = event.target as HTMLElement;
-     const calendarElement = this.elementRef.nativeElement.querySelector('.calendar');
-     const inputElement = this.elementRef.nativeElement.querySelector('input');
+  // Обробка кліку поза календарем
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const targetElement = event.target as HTMLElement;
+    const calendarElement = this.elementRef.nativeElement.querySelector('.calendar');
+    const inputElement = this.elementRef.nativeElement.querySelector('input');
 
-     if (calendarElement && calendarElement.contains(targetElement)) {
-       // Якщо клік відбувся на елементі, який представляє календар, то нічого не робимо
-       return;
-     }
+    if (calendarElement && calendarElement.contains(targetElement)) {
+      // Клік відбувся на елементі календаря, нічого не робимо
+      return;
+    }
 
-   if (inputElement && inputElement.contains(targetElement)) {
-       // Якщо клік відбувся на елементі input, то тільки відкриваємо меню
-       this.isCalendarOpen = true;
-     } else {
-       // Інакше, закриваємо меню
-       this.isCalendarOpen = false;     
-      }
-   }
- }
-
+    if (inputElement && inputElement.contains(targetElement)) {
+      // Клік відбувся на елементі input, відкриваємо календар
+      this.isCalendarOpen = true;
+    } else {
+      // Клік відбувся поза календарем та input, закриваємо календар
+      this.isCalendarOpen = false;
+    }
+  }
+}
