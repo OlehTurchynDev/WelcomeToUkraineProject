@@ -3,40 +3,64 @@
       type="text"
       (click)="toggleCalendar()"
       [value]="formattedDate"
-    
+      [readOnly]="true"
     >
-  
     <div *ngIf="isCalendarOpen" class="calendar" #calendarContainer>
-        <div class="calendar-header">
-          <div class="d-flex justify-content-between">
-            <div class="monthButtonContainer ">
-              <button (click)="getPreviousMonth()"> &#8249; </button>
-              <span class="month">{{ getMonthName() }}</span>
-              <button (click)="getNextMonth()"> &#8250; </button>
-            </div>
-            <div class="toggleCalendarButtonContainer">
-              <button class="toggleCalendarButton" (click)="toggleCalendar()">x</button>
-            </div>
+      <div class="calendar-header">
+        <div class=" d-flex ">
+            
+          <div class="monthButtonContainer d-flex align-items-center justify-content-start">
+
+          <!-- Дропдаун місяця -->
+
+            <ng-container *ngIf="isMonthDropdownOpen; else monthLabel">
+              <select class="monthDropdown" [(ngModel)]="selectedDateMonth" (ngModelChange)="onMonthChange()">
+                <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+              </select>
+            </ng-container>
+
+            <ng-template #monthLabel>
+              <span class="month" (click)="toggleMonthDropdown($event)">{{ getMonthName() }}</span>
+            </ng-template>
+
+          <!-- Дропдаун року -->
+
+            <ng-container *ngIf="isYearDropdownOpen; else yearLabel">
+              <select class="yearDropdown" [(ngModel)]="selectedDateYear" (ngModelChange)="onYearChange()">
+                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+            </ng-container>
+
+            <ng-template #yearLabel>
+              <span class="year" (click)="toggleYearDropdown($event)">{{ selectedDateYear }}</span>
+            </ng-template>
+
           </div>
+          <!-- Хрестик, вихід із датапікеру -->
+          <div class=" toggleCalendarButtonContainer d-flex ">
+            <button class="toggleCalendarButton" (click)="toggleCalendar()">x</button>
+          </div>
+
         </div>
+      </div>
       <div class="calendar-body">
         <table>
           <tr>
             <th *ngFor="let weekday of weekdays">{{ weekday }}</th>
           </tr>
           <tr *ngFor="let week of calendarDays">
-            <ng-container *ngFor="let day of week">
-              <td
-              [class.selected]="day && isDateSelected(day)"
-              [class.today]="day && isDateToday(day)"
-              (click)="day && selectDate(day)"
+            <td *ngFor="let dayData of week" 
+                (click)="selectDate(dayData.date)"
+                >
+              <span 
+              class="date" 
+              [class.prev-month]="!dayData.isCurrentMonth"
               >
-                <span class="date-number">{{ day?.getDate() }}</span>
-              </td>
-            </ng-container>
+                {{ dayData.date.getDate() }}
+              </span>
+            </td>
           </tr>
         </table>
       </div>
     </div>
   </div>
-  

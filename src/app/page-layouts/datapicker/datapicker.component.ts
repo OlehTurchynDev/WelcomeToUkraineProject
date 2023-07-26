@@ -1,17 +1,33 @@
-import { Component, ViewChild, ElementRef, HostListener, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnDestroy} from '@angular/core';
 import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-datapicker',
   templateUrl: './datapicker.component.html',
   styleUrls: ['./datapicker.component.css']
 })
+
 export class DatepickerComponent implements OnDestroy {
+
   isCalendarOpen: boolean = false; // Флаг для відкриття/закриття календаря
-  public selectedDate: Date = new Date(); // Обраний день (за замовчуванням - сьогоднішній)
+  selectedDate: Date = new Date(); // Обраний день (за замовчуванням - сьогоднішній)
   formattedDate: any = new Date().toDateString(); // Форматована дата для відображення
+
   scrollContainer: Element | Window | null = null;
-  private calendarScrollListener: EventListener | null = null; // Слухач подій для скролу
+  calendarScrollListener: EventListener | null = null; // Слухач подій для скролу
+  
+  // Масив місяців
+  months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  // Масив років (від 2000 до 2049 Включно)
+  years: number[] = Array.from({length: 50}, (_, index) => index + 2000);
+
+
+  isMonthDropdownOpen: boolean = true;
+  isYearDropdownOpen: boolean = true;
+  selectedDateMonth: number = this.selectedDate.getMonth(); // Значення початкового місяця
+  selectedDateYear: number = this.selectedDate.getFullYear(); // Значення початкового року
+
 
   constructor(private datePipe: DatePipe, private elementRef: ElementRef) {
     this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || ''; // Форматуємо дату для відображення
@@ -24,6 +40,35 @@ export class DatepickerComponent implements OnDestroy {
   ngOnDestroy() {
     this.unregisterScrollEvent();
   }
+
+
+// Check if the date belongs to the previous month
+
+
+// Методи для відкриття / закриття дропдаунів
+toggleMonthDropdown(event: Event) {
+  event.stopPropagation(); // Зупинити подальше поширення події кліку
+  this.isMonthDropdownOpen = !this.isMonthDropdownOpen;
+}
+
+toggleYearDropdown(event: Event) {
+  event.stopPropagation(); // Зупинити подальше поширення події кліку
+  this.isYearDropdownOpen = !this.isYearDropdownOpen;
+}
+
+// Методи для обробки зміни місяця і року
+onMonthChange() {
+  this.selectedDate = new Date(this.selectedDateYear, this.selectedDateMonth, 1);
+  this.formatDate();
+  this.calculateFirstDayOfCalendar();
+}
+
+onYearChange() {
+  this.selectedDate = new Date(this.selectedDateYear, this.selectedDateMonth, 1);
+  this.formatDate();
+  this.calculateFirstDayOfCalendar();
+}
+
 
   // Закриття календаря під час скролу
   closeCalendarOnScroll() {
@@ -94,21 +139,6 @@ export class DatepickerComponent implements OnDestroy {
     }
   }
 
-  // Перехід на попередній місяць
-  previousMonth() {
-    const currentMonth = this.selectedDate.getMonth();
-    this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth - 1, 1);
-    this.formatDate();
-  }
-
-  // Перехід на наступний місяць
-  nextMonth() {
-    const currentMonth = this.selectedDate.getMonth();
-    this.selectedDate = new Date(this.selectedDate.getFullYear(), currentMonth + 1, 1);
-    this.formatDate();
-    this.calculateFirstDayOfCalendar();
-  }
-
   // Отримання попереднього місяця для відображення у пустих комірках поточного місяця
   getPreviousMonth() {
     const currentMonth = this.selectedDate.getMonth();
@@ -136,33 +166,29 @@ daysInMonth(year: number, month: number): number {
     const month = this.selectedDate.getMonth();
     const firstDayOfMonth = new Date(year, month, 1);
     const firstWeekday = firstDayOfMonth.getDay();
-
-    const prevMonth = new Date(year, month - 1, 1);
-    const lastDayOfPrevMonth = new Date(year, month, 0).getDate();
-    const startDay = lastDayOfPrevMonth - firstWeekday + 1;
-
+  
+    const startDay = firstWeekday === 0 ? -5 : 2 - firstWeekday;
+  
     const calendarDays = [];
     let currentDay = startDay;
-
+  
     for (let i = 0; i < 6; i++) {
       const week = [];
       for (let j = 0; j < 7; j++) {
-        if (currentDay >= 1 && currentDay <= this.daysInMonth(year, month)) {
-          const day = new Date(year, month - 1, currentDay);
-          week.push(day);
-        } else if (currentDay <= lastDayOfPrevMonth + this.daysInMonth(year, month)) {
-          const day = new Date(year, month, currentDay - lastDayOfPrevMonth);
-          week.push(day);
-        } else {
-          week.push(null);
-        }
+        const day = new Date(year, month, currentDay);
+        const dayData = {
+          date: day,
+          isCurrentMonth: currentDay >= 1 && currentDay <= this.daysInMonth(year, month),
+        };
+        week.push(dayData);
         currentDay++;
       }
       calendarDays.push(week);
     }
-
+  
     return calendarDays;
   }
+  
 
   // Перевірка, чи дата вибрана
   isDateSelected(date: Date) {
