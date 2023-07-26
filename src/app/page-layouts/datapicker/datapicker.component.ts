@@ -61,6 +61,7 @@ onMonthChange() {
   this.selectedDate = new Date(this.selectedDateYear, this.selectedDateMonth, 1);
   this.formatDate();
   this.calculateFirstDayOfCalendar();
+  this.selectedDateMonth = this.selectedDate.getMonth();
 }
 
 onYearChange() {
@@ -103,6 +104,7 @@ onYearChange() {
   selectDate(date: Date) {
     this.selectedDate = date;
     this.formatDate();
+    this.formattedDate = this.datePipe.transform(date, 'EEE MMM dd yyyy ') || '';
     this.isCalendarOpen = false;
   }
 

@@ -193,3 +193,8 @@ button {
   .date.other-month.today {
     background-color: #f8f8f8; /* Змініть на бажаний колір */
   }
+  .datepicker-container .calendar-body table td.selected-date .date {
+    background-color: red;
+    color: white;
+  }
+  
