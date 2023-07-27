@@ -1,10 +1,14 @@
 <div class="datepicker-container">
-  <input
-    type="text"
-    (click)="toggleCalendar()"
-    [value]="formattedDate"
-    [readOnly]="true"
-  >
+    <div class="input-cantainer">
+        <input
+          type="text"
+          (click)="toggleCalendar()"
+          [value]="formattedDate"
+          [readOnly]="true"
+        >
+        <button class="bi bi-pen edit-button" (click)="editDate()"></button>
+    </div>
+
   <div *ngIf="isCalendarOpen" class="calendar" #calendarContainer>
     <div class="calendar-header">
       <div class="d-flex">
@@ -42,6 +46,7 @@
 
       </div>
     </div>
+    
     <div class="calendar-body">
       <table>
         <tr>

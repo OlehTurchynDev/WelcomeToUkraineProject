@@ -95,7 +95,7 @@ button {
     cursor: pointer;
   }
   
-  .date-number {
+  .date {
     display: flex;
     justify-content: center;
   }
@@ -105,12 +105,7 @@ button {
     cursor: pointer;
   }
   
-  .monthButton {
-    color: white;
-    font-weight: 500;
-    width: 100px;
-    padding: 5px 0;
-  }
+
   
   .monthButtonContainer {
     display: flex;
@@ -173,7 +168,6 @@ button {
   
   .toggleCalendarButton {
     padding: 0 0 0 25px;
-
     font-size: 25px;
   }
   td.prev-month {
@@ -181,13 +175,11 @@ button {
   }
   /* Стилі для дат іншого місяця */
 .date.prev-month {
-    color: #888; /* Змініть на бажаний колір */
+    color: #fff; /* Змініть на бажаний колір */
   }
   
   /* Стилі для сьогоднішньої дати */
-  .date.today {
-    background-color: #f0f0f0; /* Змініть на бажаний колір */
-  }
+
   
   /* Стилі для дат іншого місяця, які є сьогоднішніми */
   .date.other-month.today {
@@ -197,4 +189,26 @@ button {
     background-color: red;
     color: white;
   }
+  .input-container {
+    position: relative;
+    display: inline-block;
+  }
   
+  input {
+    /* Стилі інпута... */
+    padding-right: 40px; /* Встановіть відступ справа, щоб зробити місце для кнопки */
+  }
+  
+  .edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }

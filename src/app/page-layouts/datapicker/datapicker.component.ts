@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, HostListener, OnDestroy} from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, OnDestroy, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 
@@ -13,13 +13,26 @@ export class DatepickerComponent implements OnDestroy {
   isCalendarOpen: boolean = false; // Флаг для відкриття/закриття календаря
   selectedDate: Date = new Date(); // Обраний день (за замовчуванням - сьогоднішній)
   formattedDate: any = new Date().toDateString(); // Форматована дата для відображення
+  isEditing: boolean = false; // Додаємо змінну для відстеження режиму редагування
+
 
   scrollContainer: Element | Window | null = null;
   calendarScrollListener: EventListener | null = null; // Слухач подій для скролу
+
+  @Input() lang: string = 'en'; // Default language is English
+  @Input() dateFormat: string = 'EEE MMM dd yyyy';
   
   // Масив місяців
-  months: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  // Масив років (від 2000 до 2049 Включно)
+  monthsEn: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  monthsUk: string[] = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
+  
+  // Use the appropriate array based on the 'lang' parameter
+ get months(){
+  const monthLang = this.lang === 'uk' ? this.monthsUk : this.monthsEn;
+  return monthLang;
+ }   // Масив років (від 2000 до 2049 Включно)
+
+ 
   years: number[] = Array.from({length: 50}, (_, index) => index + 2000);
 
 
@@ -32,9 +45,13 @@ export class DatepickerComponent implements OnDestroy {
   constructor(private datePipe: DatePipe, private elementRef: ElementRef) {
     this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || ''; // Форматуємо дату для відображення
     this.unregisterScrollEvent();
-    console.log(this.selectedDate);
+    console.log(this.dateFormat)
   }
 
+
+  ngOnChanges() {
+    this.updateInputValue();
+  }
   @ViewChild('calendarContainer', { static: false }) calendarContainer!: ElementRef;
 
   ngOnDestroy() {
@@ -42,14 +59,44 @@ export class DatepickerComponent implements OnDestroy {
   }
 
 
-// Check if the date belongs to the previous month
+  toggleEdit() {
+    this.isEditing = !this.isEditing;
+    if (this.isEditing) {
+      const inputElement = document.querySelector('.date-edit') as HTMLInputElement;
+      if (inputElement) {
+        inputElement.focus();
+      }
+    }
+  }
 
+editDate() {
+  this.isEditing = true; // Увімкнути режим редагування
+  this.registerKeydownEvent(); // Реєструємо подію натискання клавіш
+}
 
+// Обробка натискання клавіш під час редагування
+onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Enter' || event.key === 'Escape') {
+    this.isEditing = false; // Вимкнути режим редагування при натисканні Enter або Escape
+    this.unregisterKeydownEvent(); // Скасовуємо реєстрацію події натискання клавіш
+  }
+}
+
+// Реєстрація події натискання клавіш
+registerKeydownEvent() {
+  document.addEventListener('keydown', this.onKeydown.bind(this));
+}
+
+// Відміна реєстрації події натискання клавіш
+unregisterKeydownEvent() {
+  document.removeEventListener('keydown', this.onKeydown.bind(this));
+}
 // Методи для відкриття / закриття дропдаунів
 toggleMonthDropdown(event: Event) {
   event.stopPropagation(); // Зупинити подальше поширення події кліку
   this.isMonthDropdownOpen = !this.isMonthDropdownOpen;
 }
+
 
 toggleYearDropdown(event: Event) {
   event.stopPropagation(); // Зупинити подальше поширення події кліку
@@ -112,10 +159,19 @@ onYearChange() {
   formatDate() {
     this.formattedDate = this.datePipe.transform(this.selectedDate, 'EEE MMM dd yyyy ') || '';
   }
+  // Method to format the selected date based on the chosen language and date format
+  formatSelectedDate(): string {
+    const monthNames = this.lang === 'uk' ? this.monthsUk : this.monthsEn;
+    return this.datePipe.transform(this.selectedDate, this.dateFormat + ` (${monthNames[this.selectedDate.getMonth()]})`) || '';
+  }
+  updateInputValue() {
+    this.formattedDate = this.formatSelectedDate();
+  }
 
   // Отримання днів тижня англійською
   get weekdays() {
-    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const weekdaysLang = this.lang === 'en'? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] :['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд']
+    return weekdaysLang;
   }
 
   // Отримання всіх днів місяця
@@ -125,7 +181,9 @@ onYearChange() {
 
   // Отримання назви поточного місяця
   getMonthName() {
-    return this.selectedDate.toLocaleString('en-EN', { month: 'long' });
+    
+    const monthNames = this.lang === 'uk' ? this.monthsUk : this.monthsEn;
+  return monthNames[this.selectedDate.getMonth()];
   }
 
   // Отримання дати попереднього місяця для відображення у пустих комірках поточного місяця
