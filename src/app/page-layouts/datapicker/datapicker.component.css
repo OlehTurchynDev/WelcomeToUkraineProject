@@ -1,4 +1,4 @@
-
+/* Reset styles for buttons */
 button {
     padding: 0;
     border: none;
@@ -7,8 +7,8 @@ button {
     background-color: transparent;
     cursor: pointer;
   }
-
-.datepicker-container {
+  
+  .datepicker-container {
     position: relative;
     display: inline-block;
   }
@@ -19,47 +19,41 @@ button {
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-
-  input[type="text"]:hover{
+  
+  input[type="text"]:hover {
     border: 1px solid #373737;
   }
-
+  
   .calendar {
-    position: absolute; 
-    top: 40px; 
-    left: 10%; 
+    position: absolute;
+    top: 40px;
+    left: 10%;
     border: 1px solid #373737;
     background-color: #EAEAEA;
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    z-index: 9999; 
-
+    z-index: 9999;
   }
-  .calendar-header{
+  
+  .calendar-header {
     background-color: #373737;
     text-align: end;
-    
   }
+  
   .calendar-header button {
-    margin:5px 5px 5px 5px ;
+    margin: 5px 5px 5px 5px;
     text-align: center;
     color: rgb(205, 102, 102);
     border-radius: 4px;
-
-}
-.calendar-header button:hover{
+  }
+  
+  .calendar-header button:hover {
     color: rgb(255, 0, 0);
-}
-
+  }
   
   .calendar-body {
     padding: 5px;
-  }
-  
-  button {
-    cursor: pointer;
-    background-color: #eaeaea;
-    
+    width: 300px;
   }
   
   td {
@@ -70,73 +64,151 @@ button {
   td.selected {
     position: relative;
     color: white;
-
   }
   
+  td.selected::before {
+    /* Стилі для виділеної та наведеної дат */
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 39px;
+    height: 39px;
+    border-radius: 20%;
+    background-color: red;
+    z-index: -1;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: 1px solid black;
+  }
   
-  td.selected::before
- {
-  /* Стилі для виділеної та наведеної дат */
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 39px;
-  height: 39px;;
-  border-radius: 20%;
-  background-color: red;
-  z-index: -1;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  border: 1px solid black;
-}
-td:hover{
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
-  background-color: gray;
-  border-radius: 20%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-}
-
-.date-number{
+  td:hover {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    background-color: gray;
+    border-radius: 20%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+  
+  .date {
     display: flex;
     justify-content: center;
-}
-.monthButton{
-    color: white;
-    font-weight: 500px;
-    width: 100px;
-    padding: 5px 0;
+  }
+  
+  /* Styles for the month and year dropdowns */
+  .monthDropdown, .yearDropdown {
+    cursor: pointer;
+  }
+  
 
-}
-.monthButtonContainer{
+  
+  .monthButtonContainer {
     display: flex;
     justify-content: center;
     height: 45px;
     min-width: 150px;
     justify-content: space-around;
-
-}
-.monthPannelContainer{
-    display:flex;
-
-}
-.month{
+  }
+  
+  .monthPannelContainer {
+    display: flex;
+  }
+  
+  .month,.year {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: white;
+  }
+  .monthDropdown,
+.yearDropdown {
+  cursor: pointer;
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #555;
+  width: 90px; /* Set your desired fixed width here */
+  margin: 0 4px; /* Add some margin between the two dropdowns */
 }
-.monthButtonContainer button{
-    width: 20px;
+.monthDropdown{
+
+  width: 140px; /* Set your desired fixed width here */
+
 }
-.toggleCalendarButton{
-    width: 20px;
+.monthDropdown:hover,
+.yearDropdown:hover {
+  border-color: #333;
+}
+
+/* Optional: Style the dropdowns when they are open */
+.monthDropdown.open,
+.yearDropdown.open {
+  background-color: #f1f1f1;
+}
+
+/* Optional: Style the dropdowns when they are selected */
+.monthDropdown.selected,
+.yearDropdown.selected {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
 }
   
+  .monthButtonContainer button {
+    width: 20px;
+  }
+  
+  .toggleCalendarButton {
+    padding: 0 0 0 25px;
+    font-size: 25px;
+  }
+  td.prev-month {
+    color: #ccc;
+  }
+  /* Стилі для дат іншого місяця */
+.date.prev-month {
+    color: #fff; /* Змініть на бажаний колір */
+  }
+  
+  /* Стилі для сьогоднішньої дати */
+
+  
+  /* Стилі для дат іншого місяця, які є сьогоднішніми */
+  .date.other-month.today {
+    background-color: #f8f8f8; /* Змініть на бажаний колір */
+  }
+  .datepicker-container .calendar-body table td.selected-date .date {
+    background-color: red;
+    color: white;
+  }
+  .input-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  input {
+    /* Стилі інпута... */
+    padding-right: 40px; /* Встановіть відступ справа, щоб зробити місце для кнопки */
+  }
+  
+  .edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }

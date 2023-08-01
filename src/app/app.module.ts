@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './page-layouts/header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { FormsModule } from '@angular/forms';
 
 import { NavbarComponent } from './page-layouts/header/navbar/navbar.component';
 import { HeaderModule } from './page-layouts/header.module';
@@ -29,7 +30,8 @@ import { DatePipe } from '@angular/common';
     AppRoutingModule,
     BrowserAnimationsModule,
     TypeaheadModule.forRoot(),
-    NgbModule
+    NgbModule,
+    FormsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
