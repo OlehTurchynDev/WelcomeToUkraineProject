@@ -6,7 +6,17 @@
           [value]="formattedDate"
           [readOnly]="true"
         >
-        <button class="bi bi-pen edit-button" (click)="editDate()"></button>
+        <button class="bi bi-pen edit-button" (click)="toggleEdit()"></button>
+
+        <div *ngIf="isEditing">
+            <input
+            type="text"
+            [value]="editedDate"
+            (input)="onDateInput($event)"
+            >
+            <button class="bi bi-check edit-button " (click)="saveEditedDate()">s</button>
+     </div>
+        
     </div>
 
   <div *ngIf="isCalendarOpen" class="calendar" #calendarContainer>
