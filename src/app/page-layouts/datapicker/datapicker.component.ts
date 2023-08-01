@@ -75,7 +75,7 @@ saveEditedDate() {
   const [day, month, year] = this.editedDate.split('/');
   // Apply the edited date to the selectedDate
   this.selectedDate = new Date(+year, +month - 1, +day);
-    this.formatDate(); // Reformat the selected date
+  this.formatDate(); // Reformat the selected date
   this.toggleCalendar(); // Close the calendar
 
 }
@@ -87,6 +87,8 @@ onDateInput(event: any) {
   this.editedDate = event.target.value;
 
   const parsedDate = new Date(this.editedDate);
+  this.selectedDateMonth = parsedDate.getMonth();
+  this.selectedDateYear = parsedDate.getFullYear();
 }
 
 // Методи для відкриття / закриття дропдаунів
@@ -149,7 +151,11 @@ onYearChange() {
   selectDate(date: Date) {
     this.selectedDate = date;
     this.formatDate();
-        this.isCalendarOpen = false;
+    this.isCalendarOpen = false;
+
+  // Оновлюємо значення дропдаунів при виборі дати з календаря
+  this.selectedDateMonth = this.selectedDate.getMonth();
+  this.selectedDateYear = this.selectedDate.getFullYear();
   }
 
   // Форматування дати
